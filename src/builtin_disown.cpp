@@ -101,9 +101,9 @@ maybe_t<int> builtin_disown(parser_t &parser, io_streams_t &streams, wchar_t **a
         }
 
         // Disown all target jobs
-        for (const auto &j : jobs) {
-            retval |= disown_job(cmd, parser, streams, j);
-        }
+        return std::accumulate(jobs.begin(), jobs.end(), retval, [&](int r, job_t *j) {
+            return r | disown_job(cmd, parser, streams, j);
+        });
     }
 
     return retval;
